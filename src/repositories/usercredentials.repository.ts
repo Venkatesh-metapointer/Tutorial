@@ -13,7 +13,7 @@ export class UsercredentialsRepository extends DefaultCrudRepository<
   public readonly user: BelongsToAccessor<User, typeof Usercredentials.prototype.id>;
   // public readonly user: BelongsToAccessor<User, typeof Usercredentials.prototype.id>;
 
-  constructor(
+  constructor( 
     @inject(`datasources.${UserDataSource.dataSourceName}`)
     dataSource: juggler.DataSource,
     @repository.getter('UserRepository') protected userRepositoryGetter: Getter<UserRepository>,

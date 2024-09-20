@@ -30,10 +30,10 @@ export class User extends Entity {
   email: string;
 
 
-  // @property({
-  //   type: 'string',
-  // })
-  // username?: string;
+  @property({
+    type: 'string',
+  })
+  username?: string;
 
   @property({
     type: 'string',

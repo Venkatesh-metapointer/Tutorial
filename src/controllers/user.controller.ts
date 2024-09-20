@@ -38,16 +38,20 @@ export class UserController {
             type: 'object',
             properties: {
               name: {type: 'string'},
+              phoneNumber: {type: 'number'},
               email: {type: 'string', format: 'email'},
-              password: {type: 'string'}
+              password: {type: 'string'},
+              username: {type: 'string'},
+              role: {type: 'string'}
             },
-            required: ['name', 'email', 'password'],
+            required: ['name', 'phoneNumber', 'email', 'password', 'username', 'role'],
           },
         },
       }
     }
   )
-  userData: Omit<User, 'id'>): Promise<User> {
+
+  userData: Omit<User, 'id'> & {password: string}): Promise<User> {
     try {
       console.log('Signup request received: ', userData);
 
