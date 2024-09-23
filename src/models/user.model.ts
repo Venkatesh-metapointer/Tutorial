@@ -1,6 +1,7 @@
-import {Entity, hasMany, hasOne, model, property} from '@loopback/repository';
+import {Entity, hasMany, hasOne, model, property, belongsTo} from '@loopback/repository';
 import {Team} from './team.model';
 import {Usercredentials} from './usercredentials.model';
+import {Role} from './role.model';
 
 @model()
 export class User extends Entity {
@@ -29,30 +30,26 @@ export class User extends Entity {
   })
   email: string;
 
-
   @property({
     type: 'string',
   })
   username?: string;
 
-  @property({
-    type: 'string',
-  })
-  role?: string;
-
-
   //Relation "User hasOne Usercredentials"
   @hasOne(() => Usercredentials)
   usercredentials: Usercredentials;
-
 
   @property({
     type: 'string',
   })
   teamId?: string;
 
+  
+  @belongsTo(() => Role,
+)
+  roleId: string;
 
-  //Relation "Team hasMany Users"
+  // Relation "Team hasMany Users"
   @hasMany(() => Team)
   teams: Team[];
 
@@ -61,8 +58,10 @@ export class User extends Entity {
   }
 }
 
+// Define navigational properties in the UserRelations interface
 export interface UserRelations {
   // describe navigational properties here
+
 }
 
 export type UserWithRelations = User & UserRelations;

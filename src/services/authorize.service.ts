@@ -23,11 +23,13 @@ export class AuthorizeService implements Provider<Authorizer> {
     if (!authorizationCtx.principals[0]) {
       return AuthorizationDecision.DENY;
     }
+
     const clientRole = authorizationCtx.principals[0].role;
     const allowedRoles = metadata.allowedRoles;
 
     console.log('Client Role:', clientRole);
     console.log('Allowed Roles:', allowedRoles);
+
 
     return allowedRoles?.includes(clientRole)
       ? AuthorizationDecision.ALLOW

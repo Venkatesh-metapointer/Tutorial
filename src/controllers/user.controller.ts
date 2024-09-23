@@ -7,9 +7,8 @@ import {SecurityBindings, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcrypt';
 import _ from 'lodash';
 import {User} from '../models';
-import {UserRepository} from '../repositories';
+import {RoleRepository, UserRepository} from '../repositories';
 import {MyUserService} from '../services';
-
 export class UserController {
   constructor(
     @inject(TokenServiceBindings.TOKEN_SERVICE)
@@ -20,6 +19,8 @@ export class UserController {
     private userRepository: UserRepository,
     @inject(SecurityBindings.USER, {optional: true})
     private userProfile: UserProfile,
+    @repository(RoleRepository)
+    public roleRepository: RoleRepository,
   ) { }
 
   @post('/signup')
@@ -42,19 +43,18 @@ export class UserController {
               email: {type: 'string', format: 'email'},
               password: {type: 'string'},
               username: {type: 'string'},
-              role: {type: 'string'}
+              roleId: {type: 'string'}
             },
-            required: ['name', 'phoneNumber', 'email', 'password', 'username', 'role'],
+            required: ['name', 'phoneNumber', 'email', 'password', 'username', 'roleId'],
           },
         },
       }
     }
   )
-
   userData: Omit<User, 'id'> & {password: string}): Promise<User> {
     try {
       console.log('Signup request received: ', userData);
-
+      
       if (!userData.email || !userData.password) {
         throw new HttpErrors.BadRequest('Email and password are required');
       }
@@ -70,6 +70,8 @@ export class UserController {
       const passwordHash = await hash(userData.password, await genSalt());
       const userWithoutPassword = _.omit(userData, 'password');
       const savedUser = await this.userRepository.create(userWithoutPassword);
+
+
 
       const userCredentials = await this.userRepository.usercredentials(savedUser.id).create({password: passwordHash});
       if (!userCredentials) {
@@ -107,12 +109,13 @@ export class UserController {
         },
       }
     }
-  ) credentials: {email: string, password: string, role: string}): Promise<{token: string}> {
+  ) credentials: {email: string, password: string, roleId: string}): Promise<{token: string}> {
     try {
       console.log('Login attempt with email:', credentials.email);
 
       const user = await this.userRepository.findOne({
         where: {email: credentials.email},
+
       });
 
       if (!user) {

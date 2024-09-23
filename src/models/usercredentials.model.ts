@@ -20,6 +20,9 @@ export class Usercredentials extends Entity {
   })
   password?: string;
 
+  
+
+
   @belongsTo(() => User)
   userId: string;
 

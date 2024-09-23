@@ -4,3 +4,4 @@ export * from './refreshtoken.repository';
 export * from './project.repository';
 export * from './team.repository';
 export * from './owner.repository';
+export * from './role.repository';
