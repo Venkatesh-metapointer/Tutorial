@@ -14,7 +14,7 @@ export class ProjectController {
   //------->>>>
   //List Projects API
   @authenticate('jwt')
-  @authorize({allowedRoles: ['ADMIN']})
+  @authorize({allowedRoles: ['ADMIN','TEAM-LEAD']})
   @get('/list-projects', {
     responses: {
       '200': {
